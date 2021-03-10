@@ -28,7 +28,7 @@
               </el-tag>
             </template>
           </el-table-column>
-          <el-table-column  prop="action" label="操作" class-name="table-column-action">
+          <el-table-column  prop="action" label="操作" class-name="table-column-action" v-if="rowActionSwitch">
             <template slot-scope="scope">
               <el-button type="warning" v-if="updateSwitch" @click="openDialog(scope.$index)">编辑</el-button>
               <el-button  :type="scope.row.status === 0 ? 'info' : 'danger'" @click="changeRowStatus(scope.row.id, scope.row.status === 0 ? 1 : 0, scope.$index)">
@@ -112,6 +112,12 @@ export default {
       }
     },
     updateSwitch: {
+      type: Boolean,
+      default(){
+        return true
+      }
+    },
+    rowActionSwitch: {
       type: Boolean,
       default(){
         return true

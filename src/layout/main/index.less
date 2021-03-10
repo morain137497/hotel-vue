@@ -1,0 +1,46 @@
+.side{
+    height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background: #304056;
+    overflow: hidden;
+    overflow-y: scroll;
+}
+.side::-webkit-scrollbar{
+    width: 0px;
+}
+.side::-webkit-scrollbar-thumb{
+    background: rgba(0, 0, 0, 0.3);
+}
+.main{
+    .header{
+        z-index: 999;
+        background: #FFF;
+        position: fixed;
+        top: 0;
+        height: 60px;
+        line-height: 60px;
+        box-shadow: 0 1px 4px rgba(0, 21, 41, .08);
+        overflow: hidden;
+        .side-collapse{
+            float: left;
+            padding: 0 20px;
+            cursor: pointer;
+            font-size: 20px;
+        }
+        .header-breadcrumb{
+            float: left;
+            line-height: 60px;
+        }
+        .header-dropdown{
+            float: right;
+            padding-right: 20px;
+            cursor: pointer;
+        }
+    }
+    .content{
+        margin-top: 60px;
+        padding: 20px;
+    }
+}

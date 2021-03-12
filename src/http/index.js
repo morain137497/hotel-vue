@@ -1,13 +1,16 @@
 import axios from "axios";
+import user from "@/utils/user";
 if (process.env.NODE_ENV === "production") {
     axios.defaults.baseURL = "http://47.98.45.245:8081"
 } else {
-    axios.defaults.baseURL = "http://127.0.0.1:8081"
+    axios.defaults.baseURL = "/api"
 }
 axios.defaults.timeout = 10000
+axios.defaults.withCredentials = true
+
 
 axios.interceptors.request.use( config => {
-    let token = sessionStorage.getItem("token")
+    let token = user.getToken()
     if(token != null)
         config.headers['token'] = token
     return config;

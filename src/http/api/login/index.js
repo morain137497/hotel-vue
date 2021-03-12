@@ -1,7 +1,10 @@
 import http from '@/http'
 
 export default {
-    login(params){
-        return http.post("/admin/admin-login", params)
+    sendCode(params){
+        return http.post("/auth/sendcode", params)
+    },
+    checkCode(params){
+        return http.post("/auth/checkcode", params)
     }
 }

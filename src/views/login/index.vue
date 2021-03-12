@@ -2,14 +2,21 @@
   <div id="index">
     <el-row class="box" type="flex" align="middle" justify="center">
       <el-col :lg="6" :md="14" :sm="16" :xs="20" class="login-box">
-        <h2>投票系统登录系统</h2>
+        <h2>群居登录系统</h2>
         <el-form ref="from" :model="fromInfo" :rules="fromRules">
-          <el-form-item prop="mobileNumber">
-            <el-input placeholder="请输入用户名" v-model="fromInfo.mobileNumber"  />
+          <el-form-item prop="phone">
+            <el-input placeholder="请输入手机号" v-model="fromInfo.phone"  />
           </el-form-item>
-          <el-form-item prop="password">
-            <el-input placeholder="请输入密码" v-model="fromInfo.password"  />
-          </el-form-item>
+          <el-row>
+            <el-col :span="16" >
+              <el-form-item prop="code">
+                <el-input placeholder="请输入验证码" v-model="fromInfo.code"  />
+              </el-form-item>
+            </el-col>
+            <el-col :span="7" :offset="1">
+              <el-button @click="sendCode">发送验证码</el-button>
+            </el-col>
+          </el-row>
           <el-form-item>
             <el-button type="primary" @click="login()" class="login-but">登录</el-button>
           </el-form-item>
@@ -20,38 +27,44 @@
 </template>
 
 <script>
+import user from "@/utils/user";
 export default {
   name: "index",
   data(){
     return{
       fromInfo: {
-        mobileNumber: '',
-        password: ''
+        phone: '15893316477',
+        code: '254026'
       },
       fromRules: {
-        mobileNumber: [
+        phone: [
           {required: true, message: '请输入手机号', trigger: 'blur' }
-        ],
-        password: [
-          {required: true, message: '请输入密码', trigger: 'blur' }
         ]
       }
     }
   },
   methods:{
+    sendCode() {
+      this.$refs['from'].validate((valid) => {
+        if(valid)
+        {
+          // this.$api.login.sendCode({"phone":this.fromInfo.phone})
+          //     .then(() => {})
+        }
+      })
+    },
     login(){
       this.$refs['from'].validate((valid) => {
         if(valid)
         {
-          let params = new FormData()
-          params.append("mobileNumber", this.fromInfo.mobileNumber)
-          params.append("password", this.fromInfo.password)
-          this.$api.login.login(params)
+          this.$api.login.checkCode({"phone":this.fromInfo.phone,"code":this.fromInfo.code})
           .then(res => {
-            if(res.code === 200)
+            if(res.code === 0)
             {
-              sessionStorage.setItem("token", res.data)
-              this.$router.push('/activity/activity-list')
+              console.log(res.data)
+              user.setToken(res.data.Token)
+              user.setUserId(res.data.UserId)
+              // window.location.href = "/system/index"
             }
           })
         }

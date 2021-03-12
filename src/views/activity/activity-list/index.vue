@@ -18,10 +18,10 @@ export default {
   data(){
     return{
       tableColumns: [
-        // {
-        //   label: "用户名",
-        //   prop: "username"
-        // },
+        {
+          label: "用户名",
+          prop: "username"
+        },
         {
           label: "手机号",
           prop: "mobileNumber"

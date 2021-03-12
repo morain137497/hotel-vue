@@ -5,7 +5,7 @@
         <el-form ref="searchForm" :inline="true" label-position="left">
           <slot name="search"></slot>
         </el-form>
-        <el-button type="primary" icon="el-icon-search" @click="search()">搜索</el-button>
+        <el-button type="primary" v-if="searchSwitch" icon="el-icon-search" @click="search()">搜索</el-button>
         <el-button type="warning" v-if="createSwitch" icon="el-icon-plus" @click="openDialog()">创建</el-button>
         <el-button type="danger" v-if="selectionSwitch" icon="el-icon-delete" >批量删除</el-button>
         <slot name="action"></slot>
@@ -13,7 +13,7 @@
     </my-card>
     <my-card title="数据列表">
       <template v-slot:content>
-        <el-table :data="tableRows" row-key="id" :tree-props="{children: 'children'}">
+        <el-table :data="tableRows" :row-key="rowKey" :tree-props="{children: 'children',hasChildren: 'child_cnt'}"  lazy :load="load">
           <el-table-column v-if="selectionSwitch" type="selection" width="50"></el-table-column>
           <el-table-column v-for="(item, index) in tableColumns" :key="index" :prop="item.prop" :label="item.label">
             <template slot-scope="scope">
@@ -21,7 +21,7 @@
               <span v-else>{{ scope.row[item.prop] }}</span>
             </template>
           </el-table-column>
-          <el-table-column prop="status" label="数据状态">
+          <el-table-column prop="status" label="数据状态" v-if="statusSwitch">
             <template slot-scope="scope">
               <el-tag :type="scope.row.status === 0 ? 'danger' : 'success'">
                 {{ scope.row.status === 0 ? "冻结状态" : "正常状态" }}
@@ -31,7 +31,7 @@
           <el-table-column  prop="action" label="操作" class-name="table-column-action" v-if="rowActionSwitch">
             <template slot-scope="scope">
               <el-button type="warning" v-if="updateSwitch" @click="openDialog(scope.$index)">编辑</el-button>
-              <el-button  :type="scope.row.status === 0 ? 'info' : 'danger'" @click="changeRowStatus(scope.row.id, scope.row.status === 0 ? 1 : 0, scope.$index)">
+              <el-button v-if="statusSwitch"  :type="scope.row.status === 0 ? 'info' : 'danger'" @click="changeRowStatus(scope.row.id, scope.row.status === 0 ? 1 : 0, scope.$index)">
                 {{ scope.row.status === 0 ? "解除冻结" : "数据冻结" }}
               </el-button>
               <el-button  type="danger" @click="delRow(scope.row.id, scope.$index)">删除</el-button>
@@ -54,7 +54,7 @@
 import MyCard from '@/components/my-card'
 import MyDialog from '@/components/my-dialog'
 import ele from '@/utils/ele'
-import http from '@/http'
+// import http from '@/http'
 export default {
   name: "index",
   components: {
@@ -93,6 +93,12 @@ export default {
         return []
       }
     },
+    rowKey: {
+      type: String,
+      default(){
+        return "id"
+      }
+    },
     total: {
       type: Number,
       default(){
@@ -103,6 +109,18 @@ export default {
       type: Boolean,
       default(){
         return false
+      }
+    },
+    statusSwitch: {
+      type: Boolean,
+      default(){
+        return true
+      }
+    },
+    searchSwitch: {
+      type: Boolean,
+      default(){
+        return true
       }
     },
     createSwitch: {
@@ -137,6 +155,9 @@ export default {
     }
   },
   methods: {
+    load(tree, treeNode, resolve){
+      this.$emit("load", tree, treeNode, resolve)
+    },
     /**
      * 打开dialog
      * @param index
@@ -152,8 +173,8 @@ export default {
      * @param callback
      */
     submitDialog(callback){
-      this.$emit("submitDialog", this.currentRowIndex, (message) => {
-        callback(message)
+      this.$emit("submitDialog", this.currentRowIndex, () => {
+        callback("操作成功")
       })
     },
     /**
@@ -177,14 +198,19 @@ export default {
     delRow(id, index){
       ele.confirm({
         callback: (done) => {
-            http.delete(this.actionUrl + id)
-          .then(res => {
-            if(res.code === 200)
-            {
-              done()
-              this.$message.success(res.message)
-              this.tableRows.splice(index, 1)
-            }
+          //   http.delete(this.actionUrl + id)
+          // .then(res => {
+          //   if(res.code === 200)
+          //   {
+          //     done()
+          //     this.$message.success(res.message)
+          //     this.tableRows.splice(index, 1)
+          //   }
+          // })
+          this.$emit("delRow", id, index, () => {
+            done()
+            this.tableRows.splice(index, 1)
+            this.$message.success("删除成功")
           })
         }
       })
@@ -198,14 +224,19 @@ export default {
     changeRowStatus(id, status, index){
       ele.confirm({
         callback: (done) => {
-          http.put(this.actionUrl + id + "/" + status)
-          .then(res => {
-            if(res.code === 200)
-            {
-              done()
-              this.$message.success( res.message)
-              this.tableRows[index].status = status
-            }
+          // http.put(this.actionUrl + id + "/" + status)
+          // .then(res => {
+          //   if(res.code === 200)
+          //   {
+          //     done()
+          //     this.$message.success( res.message)
+          //     this.tableRows[index].status = status
+          //   }
+          // })
+          this.$emit("changeRowStatus", id, status, () => {
+            done()
+            this.$message.success("操作成功")
+            this.tableRows[index].status = status
           })
         }
       })

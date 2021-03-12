@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Main from '@/layout/main'
-import user from "@/utils/user";
+// import api from "@/utils/api";
 
 Vue.use(VueRouter)
 const routes = [
@@ -41,59 +41,87 @@ const routes = [
       // }
     ]
   },
+  // {
+  //   path: '/scenic',
+  //   name: 'Scenic',
+  //   component: Main,
+  //   meta: {
+  //     title: '景点管理',
+  //     icon: 'el-icon-s-tools',
+  //     menu: true
+  //   },
+  //   children: [
+  //     {
+  //       path: 'category-list',
+  //       name: 'CategoryList',
+  //       meta: {
+  //         title: '景点分类列表'
+  //       },
+  //       component: () => import(/* webpackChunkName: "about" */ '@/views/scenic/category-list')
+  //     },
+  //     {
+  //       path: 'scenic-list',
+  //       name: 'ScenicList',
+  //       meta: {
+  //         title: '景点列表'
+  //       },
+  //       component: () => import(/* webpackChunkName: "about" */ '@/views/scenic/scenic-list')
+  //     }
+  //   ]
+  // },
+  // {
+  //   path: '/activity',
+  //   name: 'Activity',
+  //   component: Main,
+  //   meta: {
+  //     title: '活动管理',
+  //     icon: 'el-icon-s-tools',
+  //     menu: true
+  //   },
+  //   children: [
+  //     {
+  //       path: 'activity-list',
+  //       name: 'ActivityList',
+  //       meta: {
+  //         title: '活动列表'
+  //       },
+  //       component: () => import(/* webpackChunkName: "about" */ '@/views/activity/activity-list')
+  //     },
+  //     {
+  //       path: 'sign-up-list',
+  //       name: 'SignUpList',
+  //       meta: {
+  //         title: '报名列表'
+  //       },
+  //       component: () => import(/* webpackChunkName: "about" */ '@/views/activity/sign-up-list')
+  //     }
+  //   ]
+  // },
   {
-    path: '/scenic',
-    name: 'Scenic',
+    path: '/article',
+    name: 'Article',
     component: Main,
     meta: {
-      title: '景点管理',
+      title: '文章管理',
       icon: 'el-icon-s-tools',
       menu: true
     },
     children: [
       {
-        path: 'category-list',
-        name: 'CategoryList',
+        path: 'article-list',
+        name: 'ArticleList',
         meta: {
-          title: '景点分类列表'
+          title: '文章列表'
         },
-        component: () => import(/* webpackChunkName: "about" */ '@/views/scenic/category-list')
+        component: () => import(/* webpackChunkName: "about" */ '@/views/article/article-list')
       },
       {
-        path: 'scenic-list',
-        name: 'ScenicList',
+        path: 'comment-list',
+        name: 'CommentList',
         meta: {
-          title: '景点列表'
+          title: '评论列表'
         },
-        component: () => import(/* webpackChunkName: "about" */ '@/views/scenic/scenic-list')
-      }
-    ]
-  },
-  {
-    path: '/activity',
-    name: 'Activity',
-    component: Main,
-    meta: {
-      title: '活动管理',
-      icon: 'el-icon-s-tools',
-      menu: true
-    },
-    children: [
-      {
-        path: 'activity-list',
-        name: 'ActivityList',
-        meta: {
-          title: '活动列表'
-        },
-        component: () => import(/* webpackChunkName: "about" */ '@/views/activity/activity-list')
-      },
-      {
-        path: 'sign-up-list',
-        name: 'SignUpList',
-        meta: {
-          title: '报名列表'
-        },
-        component: () => import(/* webpackChunkName: "about" */ '@/views/activity/sign-up-list')
+        component: () => import(/* webpackChunkName: "about" */ '@/views/article/comment-list')
       }
     ]
   },
@@ -115,14 +143,14 @@ const router = new VueRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  if(user.getToken() == null && to.path != '/login')
-  {
-    next('/login')
-  }
-  else
-  {
+  // if(api.getToken() == null && to.path != '/login')
+  // {
+  //   next('/login')
+  // }
+  // else
+  // {
     next()
-  }
+  // }
 })
 
 

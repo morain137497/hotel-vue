@@ -1,7 +1,7 @@
 import login from './login'
-import user from './user'
+import api from './api'
 
 export default {
     login,
-    user
+    api
 }

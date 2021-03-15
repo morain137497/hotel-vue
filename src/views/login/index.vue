@@ -34,7 +34,7 @@ export default {
     return{
       fromInfo: {
         phone: '15893316477',
-        code: '254026'
+        code: '242490'
       },
       fromRules: {
         phone: [
@@ -48,8 +48,8 @@ export default {
       this.$refs['from'].validate((valid) => {
         if(valid)
         {
-          // this.$api.login.sendCode({"phone":this.fromInfo.phone})
-          //     .then(() => {})
+          this.$api.login.sendCode({"phone":this.fromInfo.phone})
+              .then(() => {})
         }
       })
     },
@@ -61,10 +61,8 @@ export default {
           .then(res => {
             if(res.code === 0)
             {
-              console.log(res.data)
-              user.setToken(res.data.Token)
-              user.setUserId(res.data.UserId)
-              // window.location.href = "/system/index"
+              user.setToken(res.token)
+              window.location.href = "/system/index"
             }
           })
         }

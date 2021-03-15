@@ -9,8 +9,9 @@
       </li>
       <li id="upload"  v-if="imagesList.length < imagesTotal">
         <el-upload
-            action="http://47.98.45.245:8081/common/upload-images"
+            action="http://service.qunju.cn/file/upload"
             list-type="picture-card"
+            name="object"
             :accept="imagesType"
             :headers="headers"
             :show-file-list="false"

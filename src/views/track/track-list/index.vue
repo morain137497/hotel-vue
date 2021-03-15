@@ -3,13 +3,26 @@
     <my-list :table-columns="tableColumns"
              :table-rows="tableRows"
              :status-switch="false"
-             :search-switch="false"
              @delRow="delRow"
              @submitDialog="submitDialog"
              @openDialog="openDialog"
              @closeDialog="closeDialog"
-             @currentChange="currentChange">
+             @currentChange="currentChange"
+             @search="search">
 
+
+      <template v-slot:search>
+        <el-form>
+          <el-form-item label="轨迹名称">
+            <el-input v-model="searchInfo.track_name" />
+          </el-form-item>
+          <el-form-item label="轨迹类型">
+            <el-select v-model="searchInfo.track_type">
+              <el-option v-for="(item,index) in trackTypeList" :key="index" :value="item.value" :label="item.label"></el-option>
+            </el-select>
+          </el-form-item>
+        </el-form>
+      </template>
 
       <template v-slot:createOrUpdateDialog >
         <el-form ref="from" label-position="top" :model="formInfo">
@@ -77,59 +90,79 @@ export default {
       },
       tableColumns: [
         {
-          label: "文章ID",
-          prop: "article_id"
+          label: "轨迹ID",
+          prop: "track_id"
         },
         {
-          label: "文章展示图片",
-          prop: "image_uri",
+          label: "轨迹名称",
+          prop: "track_name"
+        },
+        {
+          label: "类型",
+          prop: "track_type",
           render: (h, params) => {
-            return h('span',{}, params.row.comment_disabled === 0 ? "不能评论" : params.row.comment_disabled === 1 ? "允许评论" : "允许匿名评论")
+            return h('span',{}, params.row.track_type === 1 ? "步行" : params.row.track_type === 1 ? "开车" : "跑步")
           }
         },
         {
-          label: "评论状态",
-          prop: "comment_disabled",
-          render: (h, params) => {
-            return h('span',{}, params.row.comment_disabled === 0 ? "不能评论" : params.row.comment_disabled === 1 ? "允许评论" : "允许匿名评论")
-          }
+          label: "用户id",
+          prop: "user_id"
         },
         {
-          label: "内容简介",
-          prop: "content_short"
+          label: "轨迹起点",
+          prop: "start",
         },
         {
-          label: "是否重点文章",
-          prop: "importance",
-          render: (h, params) => {
-            return h('span',{}, params.row.importance === 0 ? "否" : params.row.importance === 1 ? "是" : "--")
-          }
+          label: "轨迹终点",
+          prop: "end"
         },
         {
-          label: "平台",
-          prop: "platform"
+          label: "开始时间",
+          prop: "begin_time"
         },
         {
-          label: "文章外链",
-          prop: "source_uri"
+          label: "结束时间",
+          prop: "end_time"
         },
         {
-          label: "文章状态",
-          prop: "status",
-          render: (h, params) => {
-            return h('span',{}, params.row.status === 0 ? "废弃" : params.row.status === 1 ? "草稿" : "发布")
-          }
+          label: "标签",
+          prop: "tag"
         },
         {
-          label: "创建时间",
-          prop: "create_time"
+          label: "备注",
+          prop: "remark"
         }
       ],
       tableRows: [{}],
-      currentPage:1
+      currentPage:1,
+      trackTypeList: [
+        {
+          value:0,
+          label: '全部'
+        },
+        {
+          value:1,
+          label: '步行'
+        },
+        {
+          value:2,
+          label: '开车'
+        },
+        {
+          value:3,
+          label: '跑步'
+        },
+      ],
+      searchInfo:{
+        track_name:'',
+        track_type: 0
+      }
     }
   },
   methods:{
+    search(){
+      this.getList()
+    },
     currentChange(currentPage){
       this.currentPage = currentPage;
     },
@@ -168,10 +201,16 @@ export default {
       })
     },
     getList(){
-      this.$api.api.articleList({
+      let params = {
         offset: this.currentPage,
         count: ComConst.PAGE_SIZE
-      })
+      }
+
+      this.searchInfo.track_name?params.track_name = this.searchInfo.track_name:params
+      this.searchInfo.track_type?params.track_type = this.searchInfo.track_type:params
+
+      
+      this.$api.api.articleList(params)
     },
   },
   mounted() {

@@ -126,6 +126,26 @@ const routes = [
     ]
   },
   {
+    path: '/track',
+    name: 'Track',
+    component: Main,
+    meta: {
+      title: '轨迹管理',
+      icon: 'el-icon-s-tools',
+      menu: true
+    },
+    children: [
+      {
+        path: 'track-list',
+        name: 'TrackList',
+        meta: {
+          title: '轨迹列表'
+        },
+        component: () => import(/* webpackChunkName: "about" */ '@/views/track/track-list')
+      }
+    ]
+  },
+  {
     path: '/login',
     name: 'Login',
     meta: {

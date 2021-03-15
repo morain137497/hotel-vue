@@ -16,7 +16,10 @@ export default {
         return http.post("/article/getdetail", params)
     },
     delArticle(params){
-        return http.post("article/deldetail", params)
+        return http.post("/article/deldetail", params)
+    },
+    articleList(params){
+        return http.post("/article/getlist", params)
     },
 
 

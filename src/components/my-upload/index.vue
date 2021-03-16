@@ -11,7 +11,7 @@
         <el-upload
             action="http://service.qunju.cn/file/upload"
             list-type="picture-card"
-            name="filename"
+            name="file_name"
             :accept="imagesType"
             :headers="headers"
             :show-file-list="false"

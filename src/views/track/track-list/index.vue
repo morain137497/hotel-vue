@@ -209,7 +209,7 @@ export default {
       this.searchInfo.track_name?params.track_name = this.searchInfo.track_name:params
       this.searchInfo.track_type?params.track_type = this.searchInfo.track_type:params
 
-      
+
       this.$api.api.articleList(params)
     },
   },

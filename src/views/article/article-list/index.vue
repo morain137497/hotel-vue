@@ -126,7 +126,7 @@ export default {
         }
       ],
       tableRows: [{}],
-      currentPage:1
+      currentPage:'1'
     }
   },
   methods:{

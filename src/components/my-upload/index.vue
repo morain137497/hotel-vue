@@ -11,7 +11,7 @@
         <el-upload
             action="http://service.qunju.cn/file/upload"
             list-type="picture-card"
-            name="object"
+            name="filename"
             :accept="imagesType"
             :headers="headers"
             :show-file-list="false"
@@ -27,6 +27,8 @@
 </template>
 
 <script>
+import user from "@/utils/user";
+import fileUtils from "@/utils/file";
 export default {
   name: "index",
   props: {
@@ -71,8 +73,15 @@ export default {
     removeImages(index){
       this.imagesList.splice(index, 1)
     },
-    beforeUpload(file){
-      this.headers.token = sessionStorage.getItem('token')
+    async beforeUpload(file){
+      let MetaData = {
+        size:file.size.toString(),
+        object:file.name
+      }
+      let md5 = await fileUtils.md5(file)
+      MetaData.md5sum = md5
+      this.headers.MetaData=JSON.stringify(MetaData)
+      this.headers['X-Token'] = user.getToken()
       this.loading = this.$loading({
         target: '#upload',
       })

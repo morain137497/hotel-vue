@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Main from '@/layout/main'
-// import api from "@/utils/api";
+import user from "@/utils/user";
 
 Vue.use(VueRouter)
 const routes = [
@@ -163,14 +163,14 @@ const router = new VueRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  // if(api.getToken() == null && to.path != '/login')
-  // {
-  //   next('/login')
-  // }
-  // else
-  // {
+  if(user.getToken() == null && to.path != '/login')
+  {
+    next('/login')
+  }
+  else
+  {
     next()
-  // }
+  }
 })
 
 

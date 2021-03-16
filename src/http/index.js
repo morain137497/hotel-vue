@@ -8,11 +8,10 @@ if (process.env.NODE_ENV === "production") {
 axios.defaults.timeout = 10000
 axios.defaults.withCredentials = true
 
-
 axios.interceptors.request.use( config => {
     let token = user.getToken()
     if(token != null)
-        config.headers['token'] = token
+        config.headers['X-Token'] = token
     return config;
 }, error => {
     return Promise.reject(error)

@@ -4,6 +4,7 @@
              :table-rows="tableRows"
              :status-switch="false"
              :search-switch="false"
+             row-key="article_id"
              @delRow="delRow"
              @submitDialog="submitDialog"
              @openDialog="openDialog"
@@ -20,13 +21,13 @@
             <el-input v-model="formInfo.platforms" />
           </el-form-item>
           <el-form-item label="封面图">
-            <my-upload v-model="formInfo.image_uri" />
+            <my-upload v-model="formInfo.image_uri_list"  @uploadSuccess="uploadSuccess" />
           </el-form-item>
           <el-form-item label="简介">
             <el-input type="textarea" v-model="formInfo.content_short" />
           </el-form-item>
           <el-form-item label="内容">
-            <wang-editor v-model="formInfo.content" />
+            <wang-editor v-model="formInfo.content" :default-content="formInfo.defaultContent"/>
           </el-form-item>
           <el-form-item label="评论状态">
             <el-select v-model="formInfo.comment_disabled">
@@ -68,12 +69,14 @@ export default {
         article_id: '',
         title: '',
         content: '',
+        defaultContent: '',
         content_short: '',
-        image_uri: [],
+        image_uri_list: [],
+        image_uri: '',
         platforms: '',
         comment_disabled: '0',
         importance: '0',
-        status: '1'
+        status: '1',
       },
       tableColumns: [
         {
@@ -81,17 +84,21 @@ export default {
           prop: "article_id"
         },
         {
-          label: "文章展示图片",
-          prop: "image_uri",
-          render: (h, params) => {
-            return h('span',{}, params.row.comment_disabled === 0 ? "不能评论" : params.row.comment_disabled === 1 ? "允许评论" : "允许匿名评论")
-          }
+          label: "文章标题",
+          prop: "title"
         },
+        // {
+        //   label: "文章展示图片",
+        //   prop: "image_uri",
+        //   render: (h, params) => {
+        //     return h('span',{}, params.row.comment_disabled === '0' ? "不能评论" : params.row.comment_disabled === '1' ? "允许评论" : "允许匿名评论")
+        //   }
+        // },
         {
           label: "评论状态",
           prop: "comment_disabled",
           render: (h, params) => {
-            return h('span',{}, params.row.comment_disabled === 0 ? "不能评论" : params.row.comment_disabled === 1 ? "允许评论" : "允许匿名评论")
+            return h('span',{}, params.row.comment_disabled === '0' ? "不能评论" : params.row.comment_disabled === '1' ? "允许评论" : "允许匿名评论")
           }
         },
         {
@@ -102,12 +109,12 @@ export default {
           label: "是否重点文章",
           prop: "importance",
           render: (h, params) => {
-            return h('span',{}, params.row.importance === 0 ? "否" : params.row.importance === 1 ? "是" : "--")
+            return h('span',{}, params.row.importance === '0' ? "否" : params.row.importance === '1' ? "是" : "--")
           }
         },
         {
           label: "平台",
-          prop: "platform"
+          prop: "platforms"
         },
         {
           label: "文章外链",
@@ -117,7 +124,7 @@ export default {
           label: "文章状态",
           prop: "status",
           render: (h, params) => {
-            return h('span',{}, params.row.status === 0 ? "废弃" : params.row.status === 1 ? "草稿" : "发布")
+            return h('span',{}, params.row.status === '0' ? "废弃" : params.row.status === '1' ? "草稿" : "发布")
           }
         },
         {
@@ -125,11 +132,14 @@ export default {
           prop: "create_time"
         }
       ],
-      tableRows: [{}],
-      currentPage:'1'
+      tableRows: [],
+      currentPage:1
     }
   },
   methods:{
+    uploadSuccess(imagesList){
+      this.formInfo.image_uri_list = imagesList
+    },
     currentChange(currentPage){
       this.currentPage = currentPage;
     },
@@ -141,7 +151,8 @@ export default {
           if(res.code == 0)
           {
             this.formInfo = res.data
-            this.formInfo.image_uri = res.data.image_uri.join(",")
+            this.formInfo.defaultContent = res.data.content
+            this.formInfo.image_uri_list = res.data.image_uri.split(",")
           }
         })
       }
@@ -150,12 +161,13 @@ export default {
       this.formInfo = this.$options.data().formInfo
     },
     submitDialog(index, callback){
-      this.formInfo.image_uri = this.formInfo.image_uri[0]
+      this.formInfo.image_uri = this.formInfo.image_uri_list[0]
       this.$api.api.cAuArticle(this.formInfo)
       .then(res => {
-        if(res == 0)
+        if(res.code == 0)
         {
           this.closeDialog()
+          this.getList()
           callback()
         }
       })
@@ -169,8 +181,11 @@ export default {
     },
     getList(){
       this.$api.api.articleList({
-        offset: this.currentPage,
+        offset: String(this.currentPage - 1),
         count: ComConst.PAGE_SIZE
+      })
+      .then(res => {
+        this.tableRows = res.data
       })
     },
   },

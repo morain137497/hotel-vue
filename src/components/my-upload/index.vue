@@ -80,7 +80,7 @@ export default {
       }
       let md5 = await fileUtils.md5(file)
       MetaData.md5sum = md5
-      this.headers.MetaData=JSON.stringify(MetaData)
+      this.headers['X-MetaData'] = JSON.stringify(MetaData)
       this.headers['X-Token'] = user.getToken()
       this.loading = this.$loading({
         target: '#upload',
@@ -95,11 +95,11 @@ export default {
       return isUpload;
     },
     onSuccess(res){
-      if(res.code == 200)
+      if(res.code == 0)
       {
-        this.imagesList.push(res.data)
-        this.$emit('onSuccess', this.imagesList)
+        this.imagesList.push(res.data.Furl)
       }
+      this.$emit('uploadSuccess', this.imagesList)
     }
   }
 }

@@ -31,10 +31,10 @@
           <el-table-column  prop="action" label="操作" class-name="table-column-action" v-if="rowActionSwitch">
             <template slot-scope="scope">
               <el-button type="warning" v-if="updateSwitch" @click="openDialog(scope.$index)">编辑</el-button>
-              <el-button v-if="statusSwitch"  :type="scope.row.status === 0 ? 'info' : 'danger'" @click="changeRowStatus(scope.row.id, scope.row.status === 0 ? 1 : 0, scope.$index)">
+              <el-button v-if="statusSwitch"  :type="scope.row.status === 0 ? 'info' : 'danger'" @click="changeRowStatus(scope.row[rowKey], scope.row.status === 0 ? 1 : 0, scope.$index)">
                 {{ scope.row.status === 0 ? "解除冻结" : "数据冻结" }}
               </el-button>
-              <el-button  type="danger" @click="delRow(scope.row.id, scope.$index)">删除</el-button>
+              <el-button  type="danger" @click="delRow(scope.row[rowKey], scope.$index)">删除</el-button>
               <slot name="row-action" :row="scope.row" :index="scope.$index"></slot>
             </template>
           </el-table-column>

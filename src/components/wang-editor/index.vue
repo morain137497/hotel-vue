@@ -1,7 +1,7 @@
 <template>
   <div id="index">
     <div id="edit">
-      <p v-html="value"></p>
+      <p v-html="defaultContent"></p>
     </div>
   </div>
 </template>
@@ -16,19 +16,18 @@ export default {
         return ''
       }
     },
-    value: {
+    defaultContent: {
       type: String,
       default(){
         return ''
       }
-    }
+    },
   },
   model: {
     prop: 'content',
     event: 'change'
   },
   mounted() {
-    this.value = this.content
     let _this = this
     const E = window.wangEditor
     const editor = new E('#edit')
@@ -42,11 +41,6 @@ export default {
       "head","bold","fontSize","fontName","italic","underline","strikeThrough","foreColor",
       "backColor","link","list","justify","quote","emoticon","image","table"
     ]
-    // editor.config.pasterTextHandle = (content) => {
-    //   _this.content = content
-    //   console.log(content)
-    //   return content
-    // }
     editor.config.uploadImgHooks = {
       customInsert: function (insertImg, result){
         let url = result.data

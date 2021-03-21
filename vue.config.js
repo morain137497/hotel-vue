@@ -22,5 +22,20 @@ module.exports = {
             } )
 
         } )
-    }
+    },
+    // devServer: {
+    //     port: 8080,
+    //     proxy: {
+    //         '/api': {
+    //             target: 'http://service.qunju.cn', // 'http://47.99.91.10:8008/psp', 'https://100healthcare.cn/psp'
+    //             ws: false,
+    //             changeOrigin: true,
+    //             pathRewrite: {
+    //                 '^/api': ''
+    //             }
+    //         }
+    //     }
+    // },
+
+
 }

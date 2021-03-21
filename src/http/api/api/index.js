@@ -10,7 +10,7 @@ export default {
 
 
     cAuArticle(params){
-        return http.post("/auth/modifyphone", params)
+        return http.post("/article/setdetail", params)
     },
     articleInfo(params){
         return http.post("/article/getdetail", params)

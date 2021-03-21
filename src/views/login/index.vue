@@ -59,10 +59,9 @@ export default {
                 this.$message.success("验证码发送成功")
                 this.codeIsSend = true
                 let timer = setInterval(() => {
-                  if(this.codeTime > 0 && this.codeTime <= 60)
+                  if(this.codeTime > 0 && this.codeTime <= 60){
                     this.codeTime--
-                  else
-                  {
+                  } else {
                     this.codeIsSend = false
                     this.codeTime = 60
                     clearInterval(timer)
@@ -80,10 +79,11 @@ export default {
         {
           this.$api.login.checkCode({"phone":this.fromInfo.phone,"code":this.fromInfo.code})
           .then(res => {
-            if(res.code == 0)
-            {
+            if(res.code == 0) {
               user.setToken(res.token)
               window.location.href = "/system/index"
+            }else{
+              this.$message.error("验证码错误")
             }
           })
         }

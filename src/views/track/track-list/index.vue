@@ -3,62 +3,60 @@
     <my-list :table-columns="tableColumns"
              :table-rows="tableRows"
              :status-switch="false"
+             :search-switch="false"
              @delRow="delRow"
              @submitDialog="submitDialog"
              @openDialog="openDialog"
              @closeDialog="closeDialog"
              @currentChange="currentChange"
+             row-key="track_id"
              @search="search">
 
 
-      <template v-slot:search>
-        <el-form>
-          <el-form-item label="轨迹名称">
-            <el-input v-model="searchInfo.track_name" />
-          </el-form-item>
-          <el-form-item label="轨迹类型">
-            <el-select v-model="searchInfo.track_type">
-              <el-option v-for="(item,index) in trackTypeList" :key="index" :value="item.value" :label="item.label"></el-option>
-            </el-select>
-          </el-form-item>
-        </el-form>
-      </template>
-
       <template v-slot:createOrUpdateDialog >
         <el-form ref="from" label-position="top" :model="formInfo">
-          <el-form-item label="标题">
-            <el-input v-model="formInfo.title" />
+          <el-form-item label="轨迹名称">
+            <el-input v-model="formInfo.track_name" />
           </el-form-item>
-          <el-form-item label="平台">
-            <el-input v-model="formInfo.platforms" />
+          <el-form-item label="起点">
+            <el-input v-model="formInfo.start" />
           </el-form-item>
-          <el-form-item label="封面图">
-            <my-upload v-model="formInfo.image_uri" />
+          <el-form-item label="终点">
+            <el-input  v-model="formInfo.end" />
           </el-form-item>
-          <el-form-item label="简介">
-            <el-input type="textarea" v-model="formInfo.content_short" />
+          <el-form-item label="开始时间">
+            <el-date-picker
+                v-model="formInfo.begin_time"
+                type="datetime"
+                placeholder="选择日期时间">
+            </el-date-picker>
           </el-form-item>
-          <el-form-item label="内容">
-            <wang-editor v-model="formInfo.content" />
+          <el-form-item label="结束时间">
+            <el-date-picker
+                v-model="formInfo.end_time"
+                type="datetime"
+                placeholder="选择日期时间">
+            </el-date-picker>
           </el-form-item>
-          <el-form-item label="评论状态">
-            <el-select v-model="formInfo.comment_disabled">
-              <el-option label="不能评论" value="0"></el-option>
-              <el-option label="登录后评论" value="1"></el-option>
-              <el-option label="匿名评论" value="2"></el-option>
-            </el-select>
+          <el-form-item label="标签">
+            <el-input  v-model="formInfo.tag" />
           </el-form-item>
-          <el-form-item label="是否重点文章">
-            <el-select v-model="formInfo.importance">
-              <el-option label="否" value="0"></el-option>
-              <el-option label="是" value="1"></el-option>
+          <el-form-item label="备注">
+            <el-input  v-model="formInfo.remark" />
+          </el-form-item>
+          <el-form-item label="起点类型">
+            <el-select v-model="formInfo.track_type">
+              <el-option label="步行" value="1"></el-option>
+              <el-option label="开车" value="2"></el-option>
+              <el-option label="跑步" value="3"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="状态">
             <el-select v-model="formInfo.status">
-              <el-option label="废弃" value="0"></el-option>
-              <el-option label="草稿" value="1"></el-option>
-              <el-option label="发布" value="2"></el-option>
+              <el-option label="弃用" value="0"></el-option>
+              <el-option label="使用" value="1"></el-option>
+              <el-option label="公开" value="2"></el-option>
+              <el-option label="审核（超级管理员）" value="3"></el-option>
             </el-select>
           </el-form-item>
         </el-form>
@@ -69,24 +67,24 @@
 
 <script>
 import MyList from '@/components/my-list'
-import WangEditor from '@/components/wang-editor'
-import MyUpload from '@/components/my-upload'
 import ComConst from "@/utils/ComConst";
 export default {
   name: "index",
-  components:{MyList, WangEditor,MyUpload},
+  components:{MyList},
   data(){
     return{
       formInfo: {
-        article_id: '',
-        title: '',
-        content: '',
-        content_short: '',
-        image_uri: [],
-        platforms: '',
-        comment_disabled: '0',
-        importance: '0',
-        status: '1'
+        track_id: '',
+        track_name: '',
+        user_id: '',
+        track_type: '1',
+        start: '',
+        end: '',
+        begin_time: '',
+        end_time: '',
+        tag: '',
+        status: '0',
+        remark: ''
       },
       tableColumns: [
         {
@@ -133,8 +131,8 @@ export default {
           prop: "remark"
         }
       ],
-      tableRows: [{}],
-      currentPage:1,
+      tableRows: [],
+      currentPage:'0',
       trackTypeList: [
         {
           value:0,
@@ -169,12 +167,11 @@ export default {
     openDialog(index){
       if(index != -1)
       {
-        this.$api.api.articleInfo({article_id: this.tableRows[index].article_id})
+        this.$api.api.trackInfo({track_id: this.tableRows[index].track_id})
         .then(res => {
           if(res.code == 0)
           {
             this.formInfo = res.data
-            this.formInfo.image_uri = res.data.image_uri.join(",")
           }
         })
       }
@@ -183,10 +180,9 @@ export default {
       this.formInfo = this.$options.data().formInfo
     },
     submitDialog(index, callback){
-      this.formInfo.image_uri = this.formInfo.image_uri[0]
-      this.$api.api.cAuArticle(this.formInfo)
+      this.$api.api.cAuTrack(this.formInfo)
       .then(res => {
-        if(res == 0)
+        if(res.code == 0)
         {
           this.closeDialog()
           callback()
@@ -194,7 +190,7 @@ export default {
       })
     },
     delRow(id, index, callback){
-      this.$api.api.delArticle({article_id: id})
+      this.$api.api.delTrack({track_id: id})
       .then(res => {
         if(res.code == 0)
           callback()
@@ -205,12 +201,14 @@ export default {
         offset: this.currentPage,
         count: ComConst.PAGE_SIZE
       }
-
       this.searchInfo.track_name?params.track_name = this.searchInfo.track_name:params
       this.searchInfo.track_type?params.track_type = this.searchInfo.track_type:params
-
-
-      this.$api.api.articleList(params)
+      this.$api.api.trackList(params)
+      .then(res => {
+        if(res.code == 0){
+          this.tableRows = res.data
+        }
+      })
     },
   },
   mounted() {

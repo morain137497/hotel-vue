@@ -5,24 +5,24 @@ import user from "@/utils/user";
 
 Vue.use(VueRouter)
 const routes = [
-  {
-    path: '/system',
-    name: 'System',
-    component: Main,
-    meta: {
-      title: '系统管理',
-      icon: 'el-icon-s-tools',
-      menu: true
-    },
-    children: [
-      {
-        path: 'index',
-        name: 'Index',
-        meta: {
-          title: '首页'
-        },
-        component: () => import(/* webpackChunkName: "about" */ '@/views/system/index')
-      },
+  // {
+    // path: '/system',
+    // name: 'System',
+    // component: Main,
+    // meta: {
+    //   title: '系统管理',
+    //   icon: 'el-icon-s-tools',
+    //   menu: true
+    // },
+    // children: [
+    //   {
+    //     path: 'index',
+    //     name: 'Index',
+    //     meta: {
+    //       title: '首页'
+    //     },
+    //     component: () => import(/* webpackChunkName: "about" */ '@/views/system/index')
+    //   },
       // {
       //   path: 'config',
       //   name: 'Config',
@@ -39,8 +39,8 @@ const routes = [
       //   },
       //   component: () => import(/* webpackChunkName: "about" */ '@/views/system/admin-list')
       // }
-    ]
-  },
+    // ]
+  // },
   // {
   //   path: '/scenic',
   //   name: 'Scenic',
@@ -69,34 +69,34 @@ const routes = [
   //     }
   //   ]
   // },
-  // {
-  //   path: '/activity',
-  //   name: 'Activity',
-  //   component: Main,
-  //   meta: {
-  //     title: '活动管理',
-  //     icon: 'el-icon-s-tools',
-  //     menu: true
-  //   },
-  //   children: [
-  //     {
-  //       path: 'activity-list',
-  //       name: 'ActivityList',
-  //       meta: {
-  //         title: '活动列表'
-  //       },
-  //       component: () => import(/* webpackChunkName: "about" */ '@/views/activity/activity-list')
-  //     },
-  //     {
-  //       path: 'sign-up-list',
-  //       name: 'SignUpList',
-  //       meta: {
-  //         title: '报名列表'
-  //       },
-  //       component: () => import(/* webpackChunkName: "about" */ '@/views/activity/sign-up-list')
-  //     }
-  //   ]
-  // },
+  {
+    path: '/activity',
+    name: 'Activity',
+    component: Main,
+    meta: {
+      title: '期次管理',
+      icon: 'el-icon-s-tools',
+      menu: true
+    },
+    children: [
+      {
+        path: 'activity-list',
+        name: 'ActivityList',
+        meta: {
+          title: '期次列表'
+        },
+        component: () => import(/* webpackChunkName: "about" */ '@/views/activity/activity-list')
+      },
+      // {
+      //   path: 'sign-up-list',
+      //   name: 'SignUpList',
+      //   meta: {
+      //     title: '报名列表'
+      //   },
+      //   component: () => import(/* webpackChunkName: "about" */ '@/views/activity/sign-up-list')
+      // }
+    ]
+  },
   {
     path: '/article',
     name: 'Article',
@@ -115,14 +115,14 @@ const routes = [
         },
         component: () => import(/* webpackChunkName: "about" */ '@/views/article/article-list')
       },
-      {
-        path: 'comment-list',
-        name: 'CommentList',
-        meta: {
-          title: '评论列表'
-        },
-        component: () => import(/* webpackChunkName: "about" */ '@/views/article/comment-list')
-      }
+      // {
+      //   path: 'comment-list',
+      //   name: 'CommentList',
+      //   meta: {
+      //     title: '评论列表'
+      //   },
+      //   component: () => import(/* webpackChunkName: "about" */ '@/views/article/comment-list')
+      // }
     ]
   },
   {
@@ -130,7 +130,7 @@ const routes = [
     name: 'Track',
     component: Main,
     meta: {
-      title: '轨迹管理',
+      title: '线路管理',
       icon: 'el-icon-s-tools',
       menu: true
     },
@@ -139,7 +139,7 @@ const routes = [
         path: 'track-list',
         name: 'TrackList',
         meta: {
-          title: '轨迹列表'
+          title: '线路列表'
         },
         component: () => import(/* webpackChunkName: "about" */ '@/views/track/track-list')
       }

@@ -26,5 +26,19 @@ export default {
 
     delComment(params){
         return http.post("comment/deldetail", params)
-    }
+    },
+
+
+    cAuTrack(params){
+        return http.post("/track/setdetail", params)
+    },
+    trackList(params){
+        return http.post("/track/list", params)
+    },
+    trackInfo(params){
+        return http.post("/track/getdetail", params)
+    },
+    delTrack(params){
+        return http.post("/track/deldetail", params)
+    },
 }

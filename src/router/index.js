@@ -74,18 +74,34 @@ const routes = [
     name: 'Activity',
     component: Main,
     meta: {
-      title: '期次管理',
+      title: '活动管理',
       icon: 'el-icon-s-tools',
       menu: true
     },
     children: [
       {
+        path: 'activity-template-list',
+        name: 'ActivityTemplateList',
+        meta: {
+          title: '活动模板列表'
+        },
+        component: () => import(/* webpackChunkName: "about" */ '@/views/activity/activity-template-list')
+      },
+      {
         path: 'activity-list',
         name: 'ActivityList',
         meta: {
-          title: '期次列表'
+          title: '活动列表'
         },
         component: () => import(/* webpackChunkName: "about" */ '@/views/activity/activity-list')
+      },
+      {
+        path: 'track-list-list',
+        name: 'trackList',
+        meta: {
+          title: '轨迹列表'
+        },
+        component: () => import(/* webpackChunkName: "about" */ '@/views/activity/track-list')
       },
       // {
       //   path: 'sign-up-list',
@@ -125,26 +141,26 @@ const routes = [
       // }
     ]
   },
-  {
-    path: '/track',
-    name: 'Track',
-    component: Main,
-    meta: {
-      title: '线路管理',
-      icon: 'el-icon-s-tools',
-      menu: true
-    },
-    children: [
-      {
-        path: 'track-list',
-        name: 'TrackList',
-        meta: {
-          title: '线路列表'
-        },
-        component: () => import(/* webpackChunkName: "about" */ '@/views/track/track-list')
-      }
-    ]
-  },
+  // {
+  //   path: '/track',
+  //   name: 'Track',
+  //   component: Main,
+  //   meta: {
+  //     title: '线路管理',
+  //     icon: 'el-icon-s-tools',
+  //     menu: true
+  //   },
+  //   children: [
+  //     {
+  //       path: 'track-list',
+  //       name: 'TrackList',
+  //       meta: {
+  //         title: '线路列表'
+  //       },
+  //       component: () => import(/* webpackChunkName: "about" */ '@/views/track/track-list')
+  //     }
+  //   ]
+  // },
   {
     path: '/login',
     name: 'Login',

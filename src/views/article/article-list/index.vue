@@ -11,7 +11,6 @@
              @closeDialog="closeDialog"
              @currentChange="currentChange">
 
-
       <template v-slot:createOrUpdateDialog >
         <el-form ref="from" label-position="top" :model="formInfo">
           <el-form-item label="标题">
@@ -42,11 +41,12 @@
               <el-option label="是" value="1"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="状态">
+          <el-form-item label="状态" v-if="formInfo.article_id">
             <el-select v-model="formInfo.status">
               <el-option label="废弃" value="0"></el-option>
               <el-option label="草稿" value="1"></el-option>
               <el-option label="发布" value="2"></el-option>
+              <el-option label="审核" value="3"></el-option>
             </el-select>
           </el-form-item>
         </el-form>
@@ -124,7 +124,7 @@ export default {
           label: "文章状态",
           prop: "status",
           render: (h, params) => {
-            return h('span',{}, params.row.status === '0' ? "废弃" : params.row.status === '1' ? "草稿" : "发布")
+            return h('span',{}, params.row.status === '0' ? "废弃" : params.row.status === '1' ? "草稿" : params.row.status === '2' ? '发布' : '审核成功')
           }
         },
         {
@@ -185,7 +185,9 @@ export default {
         count: ComConst.PAGE_SIZE
       })
       .then(res => {
-        this.tableRows = res.data
+        if(res.data != null){
+          this.tableRows = res.data
+        }
       })
     },
   },

@@ -10,16 +10,16 @@ export default {
 
 
     cAuArticle(params){
-        return http.post("/article/setdetail", params)
+        return http.post("/3000/article/setdetail", params)
     },
     articleInfo(params){
-        return http.post("/article/getdetail", params)
+        return http.post("/3000/article/getdetail", params)
     },
     delArticle(params){
-        return http.post("/article/deldetail", params)
+        return http.post("/3000/article/deldetail", params)
     },
     articleList(params){
-        return http.post("/article/getlist", params)
+        return http.post("/3000/article/getlist", params)
     },
 
 
@@ -30,15 +30,32 @@ export default {
 
 
     cAuTrack(params){
-        return http.post("/track/setdetail", params)
+        return http.post("/2000/track/setdetail", params)
     },
     trackList(params){
-        return http.post("/track/list", params)
+        return http.post("/2000/track/getlist", params)
     },
     trackInfo(params){
-        return http.post("/track/getdetail", params)
+        return http.post("/2000/track/getdetail", params)
     },
     delTrack(params){
-        return http.post("/track/deldetail", params)
+        return http.post("/2000/track/deldetail", params)
     },
+
+
+
+    cAuTemplate(params){
+        return http.post("/4000/template/setdetail", params)
+    },
+    templateList(params){
+        return http.post("/4000/template/search", params)
+    },
+
+    cAuActivity(params){
+        return http.post("/4000/activity/setdetail", params)
+    },
+    activityList(params){
+        return http.post("/4000/activity/getlist", params)
+    },
+
 }

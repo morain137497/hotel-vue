@@ -2,9 +2,9 @@ import http from '@/http'
 
 export default {
     sendCode(params){
-        return http.post("/auth/sendcode", params)
+        return http.post("/1000/auth/sendcode", params)
     },
     checkCode(params){
-        return http.post("/auth/checkcode", params)
+        return http.post("/1000/auth/checkcode", params)
     }
 }

@@ -12,41 +12,69 @@
 
       <template v-slot:createOrUpdateDialog >
         <el-form ref="from" label-position="top" :model="formInfo">
-          <el-form-item label="活动模板">
+          <el-form-item label="文章">
             <el-select v-model="formInfo.article_id">
               <el-option v-for="(item,index) in articleList" :key="index" :label="item.title" :value="item.article_id"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="开始报名时间">
-            <el-date-picker
-                v-model="formInfo.begin_time"
-                type="datetime"
-                placeholder="选择日期时间">
-            </el-date-picker>
+          <el-form-item label="轨迹">
+            <el-select v-model="formInfo.track_id">
+              <el-option v-for="(item,index) in trackList" :key="index" :label="item.track_name" :value="item.track_id"></el-option>
+            </el-select>
           </el-form-item>
-          <el-form-item label="结束报名时间">
-            <el-date-picker
-                v-model="formInfo.end_time"
-                type="datetime"
-                placeholder="选择日期时间">
-            </el-date-picker>
+          <el-form-item label="标题">
+            <el-input v-model="formInfo.title" />
           </el-form-item>
-          <el-form-item label="活动开始时间">
-            <el-date-picker
-                v-model="formInfo.depart_time"
-                type="datetime"
-                placeholder="选择日期时间">
-            </el-date-picker>
+          <el-form-item label="活动地点（城市）">
+            <el-input v-model="formInfo.city" />
           </el-form-item>
-          <el-form-item label="活动结束时间">
-            <el-date-picker
-                v-model="formInfo.finish_time"
-                type="datetime"
-                placeholder="选择日期时间">
-            </el-date-picker>
+          <el-form-item label="封面图">
+            <my-upload v-model="formInfo.image_uri_list"  @uploadSuccess="uploadSuccess" />
+          </el-form-item>
+          <el-form-item label="活动天数">
+            <el-input v-model="formInfo.days" />
+          </el-form-item>
+          <el-form-item label="起点">
+            <el-input v-model="formInfo.start" />
+          </el-form-item>
+          <el-form-item label="终点">
+            <el-input v-model="formInfo.end" />
+          </el-form-item>
+          <el-form-item label="集合地点">
+            <el-input v-model="formInfo.gather" />
+          </el-form-item>
+          <el-form-item label="最多参与人数">
+            <el-input v-model="formInfo.attend_max" />
+          </el-form-item>
+          <el-form-item label="最少参与人数">
+            <el-input v-model="formInfo.attend_min" />
+          </el-form-item>
+          <el-form-item label="折扣">
+            <el-input v-model="formInfo.discount" />
+          </el-form-item>
+          <el-form-item label="费用">
+            <el-input v-model="formInfo.fee" />
+          </el-form-item>
+          <el-form-item label="内容">
+            <wang-editor v-model="formInfo.content" :default-content="formInfo.defaultContent"/>
+          </el-form-item>
+          <el-form-item label="审核/支付方式">
+            <el-select v-model="formInfo.checked">
+              <el-option label="不审核+线下付款" value="1"></el-option>
+              <el-option label="审核" value="2"></el-option>
+              <el-option label="线上收费" value="5"></el-option>
+              <el-option label="审核+线上收费" value="7"></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="状态">
+            <el-select v-model="formInfo.status">
+              <el-option label="废弃" value="0"></el-option>
+              <el-option label="在用" value="1"></el-option>
+            </el-select>
           </el-form-item>
         </el-form>
       </template>
+
     </my-list>
   </div>
 </template>
@@ -54,9 +82,11 @@
 <script>
 import MyList from '@/components/my-list'
 import ComConst from "@/utils/ComConst";
+import WangEditor from '@/components/wang-editor'
+import MyUpload from '@/components/my-upload'
 export default {
   name: "index",
-  components:{MyList},
+  components:{MyList,WangEditor,MyUpload},
   data(){
     return{
       tableColumns: [
@@ -140,10 +170,23 @@ export default {
       tableRows: [],
       formInfo: {
         template_id: '',
-        begin_time: '',
-        end_time: '',
-        depart_time: '',
-        finish_time: ''
+        article_id: '',
+        track_id: '',
+        content: '',
+        title: '',
+        city: '',
+        days: '',
+        start: '',
+        end: '',
+        gather: '',
+        attend_max: '',
+        attend_min: '',
+        discount: '',
+        image_uri: '',
+        fee: '',
+        checked: '',
+        image_uri_list: [],
+        status: ''
       },
       currentPage: 1,
       articleList: [],
@@ -175,7 +218,8 @@ export default {
       this.formInfo = this.$options.data().formInfo
     },
     submitDialog(index, callback){
-      this.$api.api.cAuActivity(this.formInfo)
+      this.formInfo.image_uri = this.formInfo.image_uri_list[0]
+      this.$api.api.cAuTemplate(this.formInfo)
           .then(res => {
             if(res.code == 0)
             {
@@ -203,18 +247,31 @@ export default {
         }
       })
     },
-    getTemplateList(){
-      this.$api.api.templateList()
+    getArticleList(){
+      this.$api.api.articleList({
+        status: '3'
+      })
       .then(res => {
         if(res.data != null) {
           this.articleList = res.data
         }
       })
     },
+    getTrackList(){
+      this.$api.api.trackList({
+        status: '3'
+      })
+      .then(res => {
+        if(res.data != null) {
+          this.trackList = res.data
+        }
+      })
+    },
   },
   mounted() {
     this.getList()
-    this.getTemplateList()
+    this.getArticleList()
+    this.getTrackList()
   }
 }
 </script>

@@ -36,7 +36,7 @@ export default {
     return{
       fromInfo: {
         phone: '15893316477',
-        code: '361420'
+        code: '872145'
       },
       fromRules: {
         phone: [
@@ -81,7 +81,7 @@ export default {
           .then(res => {
             if(res.code == 0) {
               user.setToken(res.token)
-              window.location.href = "/system/index"
+              this.$router.push("/activity/activity-template-list")
             }else{
               this.$message.error("验证码错误")
             }

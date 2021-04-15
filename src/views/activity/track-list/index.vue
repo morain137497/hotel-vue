@@ -67,6 +67,7 @@
 <script>
 import MyList from '@/components/my-list'
 import ComConst from "@/utils/ComConst";
+import {getDateTime} from '../../../utils/date'
 export default {
   name: "index",
   components:{MyList},
@@ -161,6 +162,8 @@ export default {
       this.formInfo = this.$options.data().formInfo
     },
     submitDialog(index, callback){
+      this.formInfo.begin_time = getDateTime(this.formInfo.begin_time)
+      this.formInfo.end_time = getDateTime(this.formInfo.end_time)
       this.$api.api.cAuTrack(this.formInfo)
           .then(res => {
             if(res.code == 0)

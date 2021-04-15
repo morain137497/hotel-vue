@@ -4,6 +4,7 @@
              :table-rows="tableRows"
              row-key="activity_id"
              :search-switch="false"
+             :status-switch="false"
              @delRow="delRow"
              @submitDialog="submitDialog"
              @openDialog="openDialog"
@@ -13,8 +14,8 @@
       <template v-slot:createOrUpdateDialog >
         <el-form ref="from" label-position="top" :model="formInfo">
           <el-form-item label="活动模板">
-            <el-select v-model="formInfo.article_id">
-              <el-option v-for="(item,index) in articleList" :key="index" :label="item.title" :value="item.article_id"></el-option>
+            <el-select v-model="formInfo.template_id">
+              <el-option v-for="(item,index) in articleList" :key="index" :label="item.title" :value="item.template_id"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="开始报名时间">
@@ -54,6 +55,7 @@
 <script>
 import MyList from '@/components/my-list'
 import ComConst from "@/utils/ComConst";
+import {getDateTime} from '../../../utils/date'
 export default {
   name: "index",
   components:{MyList},
@@ -63,6 +65,10 @@ export default {
         {
           label: "活动ID",
           prop: "activity_id"
+        },
+        {
+          label: "模板ID",
+          prop: "template_id"
         },
         {
           label: "活动创建者ID",
@@ -81,20 +87,12 @@ export default {
           prop: "title"
         },
         {
-          label: "活动内容",
-          prop: "content"
-        },
-        {
           label: "报名开始时间",
           prop: "begin_time"
         },
         {
           label: "报名结束时间",
           prop: "end_time"
-        },
-        {
-          label: "集合时间",
-          prop: "gather_time"
         },
         {
           label: "活动开始时间",
@@ -143,7 +141,8 @@ export default {
         begin_time: '',
         end_time: '',
         depart_time: '',
-        finish_time: ''
+        finish_time: '',
+        activity_id: ''
       },
       currentPage: 1,
       articleList: [],
@@ -160,13 +159,11 @@ export default {
     openDialog(index){
       if(index != -1)
       {
-        this.$api.api.articleInfo({article_id: this.tableRows[index].article_id})
+        this.$api.api.activityInfo({activity_id: this.tableRows[index].activity_id})
             .then(res => {
               if(res.code == 0)
               {
-                this.formInfo = res.data
-                this.formInfo.defaultContent = res.data.content
-                this.formInfo.image_uri_list = res.data.image_uri.split(",")
+                this.formInfo = res.data.activity
               }
             })
       }
@@ -175,6 +172,10 @@ export default {
       this.formInfo = this.$options.data().formInfo
     },
     submitDialog(index, callback){
+      this.formInfo.begin_time = getDateTime(this.formInfo.begin_time)
+      this.formInfo.end_time = getDateTime(this.formInfo.end_time)
+      this.formInfo.depart_time = getDateTime(this.formInfo.depart_time)
+      this.formInfo.finish_time = getDateTime(this.formInfo.finish_time)
       this.$api.api.cAuActivity(this.formInfo)
           .then(res => {
             if(res.code == 0)
@@ -204,7 +205,10 @@ export default {
       })
     },
     getTemplateList(){
-      this.$api.api.templateList()
+      this.$api.api.templateList({
+        offset: String(0),
+        count: '100000'
+      })
       .then(res => {
         if(res.data != null) {
           this.articleList = res.data

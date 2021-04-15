@@ -2,8 +2,9 @@
   <div id="index">
     <my-list :table-columns="tableColumns"
              :table-rows="tableRows"
-             row-key="activity_id"
+             row-key="template_id"
              :search-switch="false"
+             :status-switch="false"
              @delRow="delRow"
              @submitDialog="submitDialog"
              @openDialog="openDialog"
@@ -40,8 +41,19 @@
           <el-form-item label="终点">
             <el-input v-model="formInfo.end" />
           </el-form-item>
-          <el-form-item label="集合地点">
-            <el-input v-model="formInfo.gather" />
+          <el-form-item label="集合参数">
+            <el-row v-for="(item,index) in formInfo.gatherList" :key="index">
+              <el-col :span="10">
+                  <el-input v-model="formInfo.gatherList[index].address" placeholder="集合地点" />
+              </el-col>
+              <el-col :span="10" :offset="1">
+                  <el-date-picker type="datetime" v-model="formInfo.gatherList[index].time" placeholder="选择集合时间"></el-date-picker>
+              </el-col>
+              <el-col :span="2" :offset="1" v-if="index !== 0">
+                <i class="el-icon-circle-close" @click="delGatherItem(index)"></i>
+              </el-col>
+            </el-row>
+            <el-button @click="addGatherItem()">添加</el-button>
           </el-form-item>
           <el-form-item label="最多参与人数">
             <el-input v-model="formInfo.attend_max" />
@@ -84,16 +96,13 @@ import MyList from '@/components/my-list'
 import ComConst from "@/utils/ComConst";
 import WangEditor from '@/components/wang-editor'
 import MyUpload from '@/components/my-upload'
+import {getDateTime} from '../../../utils/date'
 export default {
   name: "index",
   components:{MyList,WangEditor,MyUpload},
   data(){
     return{
       tableColumns: [
-        {
-          label: "活动ID",
-          prop: "activity_id"
-        },
         {
           label: "活动创建者ID",
           prop: "user_id"
@@ -109,30 +118,6 @@ export default {
         {
           label: "活动标题",
           prop: "title"
-        },
-        {
-          label: "活动内容",
-          prop: "content"
-        },
-        {
-          label: "报名开始时间",
-          prop: "begin_time"
-        },
-        {
-          label: "报名结束时间",
-          prop: "end_time"
-        },
-        {
-          label: "集合时间",
-          prop: "gather_time"
-        },
-        {
-          label: "活动开始时间",
-          prop: "depart_time"
-        },
-        {
-          label: "活动结束时间",
-          prop: "finish_time"
         },
         {
           label: "活动天数",
@@ -186,7 +171,10 @@ export default {
         fee: '',
         checked: '',
         image_uri_list: [],
-        status: ''
+        status: '',
+        gatherList: [
+          {address: '', time: ''}
+        ]
       },
       currentPage: 1,
       articleList: [],
@@ -194,6 +182,12 @@ export default {
     }
   },
   methods:{
+    addGatherItem(){
+      this.formInfo.gatherList.push({address: '', time: ''})
+    },
+    delGatherItem(index){
+      this.formInfo.gatherList.splice(index,1)
+    },
     uploadSuccess(imagesList){
       this.formInfo.image_uri_list = imagesList
     },
@@ -203,13 +197,13 @@ export default {
     openDialog(index){
       if(index != -1)
       {
-        this.$api.api.articleInfo({article_id: this.tableRows[index].article_id})
+        this.$api.api.templateInfo({template_id: this.tableRows[index].template_id})
             .then(res => {
               if(res.code == 0)
               {
-                this.formInfo = res.data
-                this.formInfo.defaultContent = res.data.content
-                this.formInfo.image_uri_list = res.data.image_uri.split(",")
+                this.formInfo = res.data.template
+                this.formInfo.defaultContent = res.data.template.content
+                this.formInfo.image_uri_list = res.data.template.image_uri.split(",")
               }
             })
       }
@@ -218,6 +212,10 @@ export default {
       this.formInfo = this.$options.data().formInfo
     },
     submitDialog(index, callback){
+      this.formInfo.gatherList.forEach(item => {
+        item.time = getDateTime(item.time)
+      })
+      this.formInfo.gather = JSON.stringify(this.formInfo.gatherList)
       this.formInfo.image_uri = this.formInfo.image_uri_list[0]
       this.$api.api.cAuTemplate(this.formInfo)
           .then(res => {
@@ -237,7 +235,7 @@ export default {
           })
     },
     getList(){
-      this.$api.api.activityList({
+      this.$api.api.templateList({
         offset: String(this.currentPage - 1),
         count: ComConst.PAGE_SIZE
       })

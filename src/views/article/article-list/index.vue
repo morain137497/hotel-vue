@@ -87,13 +87,6 @@ export default {
           label: "文章标题",
           prop: "title"
         },
-        // {
-        //   label: "文章展示图片",
-        //   prop: "image_uri",
-        //   render: (h, params) => {
-        //     return h('span',{}, params.row.comment_disabled === '0' ? "不能评论" : params.row.comment_disabled === '1' ? "允许评论" : "允许匿名评论")
-        //   }
-        // },
         {
           label: "评论状态",
           prop: "comment_disabled",

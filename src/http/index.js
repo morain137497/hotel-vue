@@ -1,5 +1,6 @@
 import axios from "axios";
 import user from "@/utils/user";
+import {Message} from "element-ui";
 if (process.env.NODE_ENV === "production") {
     axios.defaults.baseURL = "http://47.98.45.245:8081"
 } else {
@@ -38,7 +39,7 @@ axios.interceptors.response.use( response => {
                 // 找不到
                 break
         }
-        // Toast.fail(error.response.data.message)
+        Message.error(error.response.data.message)
     }else{
         if(!window.navigator.onLine){
             // 断网处理

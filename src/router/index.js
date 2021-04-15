@@ -5,24 +5,24 @@ import user from "@/utils/user";
 
 Vue.use(VueRouter)
 const routes = [
-  // {
-    // path: '/system',
-    // name: 'System',
-    // component: Main,
-    // meta: {
-    //   title: '系统管理',
-    //   icon: 'el-icon-s-tools',
-    //   menu: true
-    // },
-    // children: [
-    //   {
-    //     path: 'index',
-    //     name: 'Index',
-    //     meta: {
-    //       title: '首页'
-    //     },
-    //     component: () => import(/* webpackChunkName: "about" */ '@/views/system/index')
-    //   },
+  {
+    path: '/system',
+    name: 'System',
+    component: Main,
+    meta: {
+      title: '系统管理',
+      icon: 'el-icon-s-tools',
+      menu: true
+    },
+    children: [
+      // {
+      //   path: 'index',
+      //   name: 'Index',
+      //   meta: {
+      //     title: '首页'
+      //   },
+      //   component: () => import(/* webpackChunkName: "about" */ '@/views/system/index')
+      // },
       // {
       //   path: 'config',
       //   name: 'Config',
@@ -31,16 +31,24 @@ const routes = [
       //   },
       //   component: () => import(/* webpackChunkName: "about" */ '@/views/system/config')
       // },
-      // {
-      //   path: 'admin-list',
-      //   name: 'AdminList',
-      //   meta: {
-      //     title: '管理员列表'
-      //   },
-      //   component: () => import(/* webpackChunkName: "about" */ '@/views/system/admin-list')
-      // }
-    // ]
-  // },
+      {
+        path: 'leader-list',
+        name: 'LeaderList',
+        meta: {
+          title: '领队列表'
+        },
+        component: () => import(/* webpackChunkName: "about" */ '@/views/system/leader-list')
+      },
+      {
+        path: 'vip-user-list',
+        name: 'vipUserList',
+        meta: {
+          title: 'VIP用户列表'
+        },
+        component: () => import(/* webpackChunkName: "about" */ '@/views/system/vip-user-list')
+      }
+    ]
+  },
   // {
   //   path: '/scenic',
   //   name: 'Scenic',

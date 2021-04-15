@@ -3,12 +3,30 @@ import http from '@/http'
 export default {
     modifyPhone(params){
         return http.post("/auth/modifyphone", params)
-    }
-    ,
+    },
 
 
+    // 领队
+    leaderList(params){
+        return http.post("/4000/leader/getlist", params)
+    },
+    cAuLeader(params){
+        return http.post("/4000/leader/setdetail", params)
+    },
+
+    // VIP用户
+    vipUserList(params){
+        return http.post("/4000/vip/getlist", params)
+    },
+    cAuVipUser(params){
+        return http.post("/4000/vip/setdetail", params)
+    },
+    getUserId(params){
+        return http.post("/1000/user/phone", params)
+    },
 
 
+    // 文章
     cAuArticle(params){
         return http.post("/3000/article/setdetail", params)
     },
@@ -23,12 +41,13 @@ export default {
     },
 
 
-
+    // 评论
     delComment(params){
         return http.post("comment/deldetail", params)
     },
 
 
+    // 路线
     cAuTrack(params){
         return http.post("/2000/track/setdetail", params)
     },
@@ -43,19 +62,26 @@ export default {
     },
 
 
-
+    // 活动模板
     cAuTemplate(params){
         return http.post("/4000/template/setdetail", params)
     },
     templateList(params){
         return http.post("/4000/template/search", params)
     },
+    templateInfo(params){
+        return http.post("/4000/template/getdetail", params)
+    },
 
+    // 活动
     cAuActivity(params){
         return http.post("/4000/activity/setdetail", params)
     },
     activityList(params){
         return http.post("/4000/activity/getlist", params)
+    },
+    activityInfo(params){
+        return http.post("/4000/activity/getdetail", params)
     },
 
 }

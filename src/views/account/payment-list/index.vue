@@ -100,7 +100,7 @@ export default {
           })
     },
     getList(){
-      this.$api.api.trackList({
+      this.$api.api.paymentList({
         offset: String(this.currentPage - 1),
         count: ComConst.PAGE_SIZE
       })

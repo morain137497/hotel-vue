@@ -84,4 +84,18 @@ export default {
         return http.post("/4000/activity/getdetail", params)
     },
 
+    // 支付
+    paymentList(params){
+        return http.post("/6000/payment/getlist", params)
+    },
+
+
+    // 退款
+    refundList(params){
+        return http.post("/6000/refund/getlist", params)
+    },
+    refuseRefund(params){
+        return http.post("/6000/refund/deldetail", params)
+    }
+
 }

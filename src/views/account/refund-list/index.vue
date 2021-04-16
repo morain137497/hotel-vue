@@ -14,9 +14,10 @@
              @closeDialog="closeDialog"
              @currentChange="currentChange">
 
-      <template v-slot:row-action >
-        <el-button type="success">同意</el-button>
-        <el-button type="danger">拒绝</el-button>
+      <template v-slot:row-action="row" >
+        <el-button type="success" @click="partOk(row.row)">部分退款</el-button>
+        <el-button type="success" @click="ok(row.row)">直接退款</el-button>
+        <el-button type="danger" @click="refuse(row.row)">拒绝</el-button>
       </template>
 
     </my-list>
@@ -70,13 +71,32 @@ export default {
           }
         },
       ],
-      tableRows: [],
+      tableRows: [{refund_id: '231'}],
       formInfo: {
       },
       currentPage: 1,
     }
   },
   methods:{
+    partOk(row){
+      console.log(row)
+      this.$prompt('请输入退款金额', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+      }).then(({ value }) => {
+        alert(value)
+      })
+    },
+    ok(row){
+      console.log(row)
+
+    },
+    refuse(row){
+      this.$api.api.refuseRefund({refund_id: row.refund_id})
+      .then(() => {
+        this.$message.success("操作成功")
+      })
+    },
     currentChange(currentPage){
       this.currentPage = currentPage;
     },
@@ -114,7 +134,7 @@ export default {
           })
     },
     getList(){
-      this.$api.api.trackList({
+      this.$api.api.refundList({
         offset: String(this.currentPage - 1),
         count: ComConst.PAGE_SIZE
       })

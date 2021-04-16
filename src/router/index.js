@@ -83,7 +83,7 @@ const routes = [
     component: Main,
     meta: {
       title: '活动管理',
-      icon: 'el-icon-s-tools',
+      icon: 'el-icon-s-finance',
       menu: true
     },
     children: [
@@ -127,7 +127,7 @@ const routes = [
     component: Main,
     meta: {
       title: '文章管理',
-      icon: 'el-icon-s-tools',
+      icon: 'el-icon-reading',
       menu: true
     },
     children: [
@@ -149,26 +149,34 @@ const routes = [
       // }
     ]
   },
-  // {
-  //   path: '/track',
-  //   name: 'Track',
-  //   component: Main,
-  //   meta: {
-  //     title: '线路管理',
-  //     icon: 'el-icon-s-tools',
-  //     menu: true
-  //   },
-  //   children: [
-  //     {
-  //       path: 'track-list',
-  //       name: 'TrackList',
-  //       meta: {
-  //         title: '线路列表'
-  //       },
-  //       component: () => import(/* webpackChunkName: "about" */ '@/views/track/track-list')
-  //     }
-  //   ]
-  // },
+  {
+    path: '/account',
+    name: 'Account',
+    component: Main,
+    meta: {
+      title: '账户管理',
+      icon: 'el-icon-coin',
+      menu: true
+    },
+    children: [
+      {
+        path: 'payment-list',
+        name: 'PaymentList',
+        meta: {
+          title: '支付列表'
+        },
+        component: () => import(/* webpackChunkName: "about" */ '@/views/account/payment-list')
+      },
+      {
+        path: 'refund-list',
+        name: 'RefundList',
+        meta: {
+          title: '退款列表'
+        },
+        component: () => import(/* webpackChunkName: "about" */ '@/views/account/refund-list')
+      }
+    ]
+  },
   {
     path: '/login',
     name: 'Login',

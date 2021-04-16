@@ -1,6 +1,6 @@
 <template>
   <div id="index">
-    <my-card title="操作">
+    <my-card title="操作" v-if="searchSwitch || createSwitch || selectionSwitch || slots['action'] !== undefined">
       <template v-slot:content>
         <el-form ref="searchForm" :inline="true" label-position="left">
           <slot name="search"></slot>
@@ -157,8 +157,12 @@ export default {
   data(){
     return{
       dialogTitle: '创建',
-      currentRowIndex: -1
+      currentRowIndex: -1,
+      slots: this.$slots
     }
+  },
+  mounted() {
+    console.log(this.slots['action'])
   },
   methods: {
     load(tree, treeNode, resolve){

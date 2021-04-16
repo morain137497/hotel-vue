@@ -20,6 +20,9 @@ axios.interceptors.request.use( config => {
 })
 
 axios.interceptors.response.use( response => {
+    if(response.data.code !== 0){
+        Message.error(response.data.msg)
+    }
     return response.data
 }, error => {
     if( error.response ) {

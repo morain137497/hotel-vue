@@ -5,6 +5,7 @@
              row-key="template_id"
              :search-switch="false"
              :status-switch="false"
+             :delete-switch="false"
              @delRow="delRow"
              @submitDialog="submitDialog"
              @openDialog="openDialog"
@@ -42,12 +43,12 @@
             <el-input v-model="formInfo.end" />
           </el-form-item>
           <el-form-item label="集合参数">
-            <el-row v-for="(item,index) in formInfo.gatherList" :key="index">
+            <el-row v-for="(item,index) in gatherList" :key="index">
               <el-col :span="10">
-                  <el-input v-model="formInfo.gatherList[index].address" placeholder="集合地点" />
+                  <el-input v-model="item.address" placeholder="集合地点" />
               </el-col>
               <el-col :span="10" :offset="1">
-                  <el-date-picker type="datetime" v-model="formInfo.gatherList[index].time" placeholder="选择集合时间"></el-date-picker>
+                  <el-date-picker type="datetime" v-model="item.time" placeholder="选择集合时间"></el-date-picker>
               </el-col>
               <el-col :span="2" :offset="1" v-if="index !== 0">
                 <i class="el-icon-circle-close" @click="delGatherItem(index)"></i>
@@ -61,8 +62,17 @@
           <el-form-item label="最少参与人数">
             <el-input v-model="formInfo.attend_min" />
           </el-form-item>
-          <el-form-item label="折扣">
-            <el-input v-model="formInfo.discount" />
+          <el-form-item label="折扣类型">
+            <el-select v-model="discount_type">
+              <el-option label="固定折扣" value="value"></el-option>
+              <el-option label="按天折扣" value="weekday"></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="折扣值" v-if="discount_type === 'value'">
+            <el-input v-model="discount_value" />
+          </el-form-item>
+          <el-form-item label="折扣值" v-if="discount_type === 'weekday'">
+            <el-input v-for="(item ,index) in weekdayList" :key="index" :placeholder="item.label" v-model="item.value" />
           </el-form-item>
           <el-form-item label="费用">
             <el-input v-model="formInfo.fee" />
@@ -132,10 +142,6 @@ export default {
           prop: "end"
         },
         {
-          label: "集合地点",
-          prop: "gather"
-        },
-        {
           label: "最多参与人数",
           prop: "attend_max"
         },
@@ -171,11 +177,22 @@ export default {
         fee: '',
         checked: '',
         image_uri_list: [],
-        status: '',
-        gatherList: [
-          {address: '', time: ''}
-        ]
+        status: ''
       },
+      gatherList: [
+        {address: '', time: ''}
+      ],
+      weekdayList: [
+        {label: '周日', value: ''},
+        {label: '周一', value: ''},
+        {label: '周二', value: ''},
+        {label: '周三', value: ''},
+        {label: '周四', value: ''},
+        {label: '周五', value: ''},
+        {label: '周六', value: ''}
+      ],
+      discount_type: 'value',
+      discount_value: '',
       currentPage: 1,
       articleList: [],
       trackList: []
@@ -183,10 +200,10 @@ export default {
   },
   methods:{
     addGatherItem(){
-      this.formInfo.gatherList.push({address: '', time: ''})
+      this.gatherList.push({address: '', time: ''})
     },
     delGatherItem(index){
-      this.formInfo.gatherList.splice(index,1)
+      this.gatherList.splice(index,1)
     },
     uploadSuccess(imagesList){
       this.formInfo.image_uri_list = imagesList
@@ -204,6 +221,15 @@ export default {
                 this.formInfo = res.data.template
                 this.formInfo.defaultContent = res.data.template.content
                 this.formInfo.image_uri_list = res.data.template.image_uri.split(",")
+                this.gatherList = JSON.parse(res.data.template.gather)
+
+                const discount = JSON.parse(res.data.template.discount)
+                this.discount_type = discount.type
+
+                this.weekdayList.forEach((item,index) => {
+                  item.value = discount.rule[index]
+                })
+
               }
             })
       }
@@ -212,11 +238,26 @@ export default {
       this.formInfo = this.$options.data().formInfo
     },
     submitDialog(index, callback){
-      this.formInfo.gatherList.forEach(item => {
+      this.gatherList.forEach(item => {
         item.time = getDateTime(item.time)
       })
-      this.formInfo.gather = JSON.stringify(this.formInfo.gatherList)
+      this.formInfo.gather = JSON.stringify(this.gatherList)
       this.formInfo.image_uri = this.formInfo.image_uri_list[0]
+
+      const discount = {
+        type: this.discount_type
+      }
+      if(this.discount_type === 'value'){
+        discount.rule = this.discount_value
+      }
+      if(this.discount_type === 'weekday'){
+        const rule = {}
+        this.weekdayList.forEach((item,index) => {
+          rule[index] = item.value
+        })
+        discount.rule = rule
+      }
+      this.formInfo.discount = JSON.stringify(discount)
       this.$api.api.cAuTemplate(this.formInfo)
           .then(res => {
             if(res.code == 0)

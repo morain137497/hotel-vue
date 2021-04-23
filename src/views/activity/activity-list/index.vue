@@ -48,19 +48,58 @@
           </el-form-item>
         </el-form>
       </template>
+      <template v-slot:row-action="params">
+        <el-button  type="danger" @click="activityCancel(params.row)">取消</el-button>
+        <el-button  type="danger" @click="activityOk(params.row)">结算</el-button>
+        <el-button  type="danger" @click="activityOkDetails(params.row)">结算详情</el-button>
+      </template>
     </my-list>
+
+    <my-dialog ref="my-dialog" title="结算详情" :submit-but-switch="false">
+      <template v-slot:dialog>
+        <el-form >
+          <el-form-item label="活动ID">{{curActivityOkDetails.activity_id}}</el-form-item>
+          <el-form-item label="活动标题">{{curActivityOkDetails.title}}</el-form-item>
+          <el-form-item label="活动所有者ID">{{curActivityOkDetails.user_id}}</el-form-item>
+          <el-form-item label="活动支付明细">{{curActivityOkDetails.fee_detail}}</el-form-item>
+          <el-form-item label="活动成功参与人数">{{curActivityOkDetails.attend_suc}}</el-form-item>
+          <el-form-item label="活动总支付">{{curActivityOkDetails.fee}}</el-form-item>
+          <el-form-item label="活动总收入">{{curActivityOkDetails.amount}}</el-form-item>
+          <el-form-item label="领队补贴">{{curActivityOkDetails.subsidies}}</el-form-item>
+          <el-form-item label="领队奖金">{{curActivityOkDetails.bonus}}</el-form-item>
+          <el-form-item label="领队提成">{{curActivityOkDetails.commission}}</el-form-item>
+          <el-form-item label="活动总盈利">{{curActivityOkDetails.income}}</el-form-item>
+        </el-form>
+      </template>
+    </my-dialog>
+
   </div>
 </template>
 
 <script>
+import MyDialog from '@/components/my-dialog'
 import MyList from '@/components/my-list'
 import ComConst from "@/utils/ComConst";
 import {getDateTime} from '../../../utils/date'
+import ele from '../../../utils/ele'
 export default {
   name: "index",
-  components:{MyList},
+  components:{MyList, MyDialog},
   data(){
     return{
+      curActivityOkDetails: {
+        activity_id: '',
+        user_id: '',
+        fee_detail: '',
+        fee: '',
+        amount: '',
+        subsidies: '',
+        bonus: '',
+        commission: '',
+        income: '',
+        title: '',
+        attend_suc: '',
+      },
       tableColumns: [
         {
           label: "活动ID",
@@ -75,16 +114,16 @@ export default {
           prop: "user_id"
         },
         {
-          label: "文章ID",
-          prop: "article_id"
-        },
-        {
-          label: "轨迹ID",
-          prop: "track_id"
-        },
-        {
           label: "活动标题",
           prop: "title"
+        },
+        {
+          label: "活动状态",
+          prop: "checked",
+          render: (h, params) => {
+            return h('span',{
+            }, params.row.start === '1' ? "未开始" : params.row.start === '2' ? "报名中" : params.row.start === '3' ? "结束报名" : params.row.start === '4' ? '进行中' : '已经结束')
+          }
         },
         {
           label: "报名开始时间",
@@ -115,10 +154,6 @@ export default {
           prop: "end"
         },
         {
-          label: "集合地点",
-          prop: "gather"
-        },
-        {
           label: "最多参与人数",
           prop: "attend_max"
         },
@@ -127,7 +162,7 @@ export default {
           prop: "checked",
           render: (h, params) => {
             return h('span',{
-            }, params.row.checked === 1 ? "不审核+线下付款" : params.row.checked === 3 ? "审核" : params.row.checked === 5 ? "线上收费" : "审核+线上收费")
+            }, params.row.checked === '1' ? "不审核+线下付款" : params.row.checked === '3' ? "审核" : params.row.checked === '5' ? "线上收费" : "审核+线上收费")
           }
         },
         {
@@ -150,6 +185,37 @@ export default {
     }
   },
   methods:{
+    activityOkDetails(row){
+      this.$api.api.activityOkDetails({activity_id: row.activity_id})
+      .then(res => {
+        if(res.code === 0){
+          this.curActivityOkDetails = res.data
+          this.$refs['my-dialog'].status = true
+        }
+      })
+    },
+     activityCancel(row){
+      ele.confirm({callback: (done) => {
+          done()
+          this.$api.api.activityCancel({activity_id: row.activity_id})
+          .then(res => {
+            if(res.code === 0){
+              this.$message.success("取消成功")
+            }
+          })
+      }})
+    },
+    activityOk(row){
+      ele.confirm({callback: (done) => {
+          done()
+          this.$api.api.activityOk({activity_id: row.activity_id})
+              .then(res => {
+                if(res.code === 0){
+                  this.$message.success("结算成功")
+                }
+              })
+        }})
+    },
     uploadSuccess(imagesList){
       this.formInfo.image_uri_list = imagesList
     },

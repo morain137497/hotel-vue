@@ -243,7 +243,6 @@ export default {
       })
       this.formInfo.gather = JSON.stringify(this.gatherList)
       this.formInfo.image_uri = this.formInfo.image_uri_list[0]
-
       const discount = {
         type: this.discount_type
       }
@@ -257,6 +256,7 @@ export default {
         })
         discount.rule = rule
       }
+      this.formInfo.fee = (Number(this.formInfo.fee) * 100).toString()
       this.formInfo.discount = JSON.stringify(discount)
       this.$api.api.cAuTemplate(this.formInfo)
           .then(res => {

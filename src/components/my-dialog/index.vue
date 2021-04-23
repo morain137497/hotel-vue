@@ -8,7 +8,7 @@
       </el-row>
       <div slot="footer">
         <el-button size="small" @click="closeDialog()">取 消</el-button>
-        <el-button size="small" type="primary" @click="submitDialog()">提 交</el-button>
+        <el-button size="small" type="primary" @click="submitDialog()" v-if="submitButSwitch">提 交</el-button>
       </div>
     </el-dialog>
   </div>
@@ -22,6 +22,12 @@ export default {
       type:String,
       default(){
         return '提示'
+      }
+    },
+    submitButSwitch:{
+      type:Boolean,
+      default(){
+        return true
       }
     }
   },

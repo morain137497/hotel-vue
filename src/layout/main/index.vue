@@ -12,15 +12,15 @@
           <el-breadcrumb-item v-for="(item, index) in $route.matched" :key="index">{{item.meta.title}}</el-breadcrumb-item>
         </el-breadcrumb>
         <el-dropdown class="header-dropdown" trigger="click" size="medium" placement="bottom-start" @command="handleCommand">
-          <span>
-            {{userId}}<i class="el-icon-arrow-down el-icon--right"></i>
-          </span>
-          <el-dropdown-menu slot="dropdown">
+<!--          <span>-->
+<!--            {{userId}}<i class="el-icon-arrow-down el-icon&#45;&#45;right"></i>-->
+<!--          </span>-->
+<!--          <el-dropdown-menu slot="dropdown">-->
 <!--            <el-dropdown-item>个人中心</el-dropdown-item>-->
 <!--            <el-dropdown-item>首页</el-dropdown-item>-->
-            <el-dropdown-item command="updatePhone">修改手机号</el-dropdown-item>
+<!--            <el-dropdown-item command="updatePhone">修改手机号</el-dropdown-item>-->
 <!--            <el-dropdown-item divided>安全退出</el-dropdown-item>-->
-          </el-dropdown-menu>
+<!--          </el-dropdown-menu>-->
         </el-dropdown>
       </div>
       <my-dialog ref="my-dialog" title="修改手机号" @submitDialog="submitDialog" @closeDialog="closeDialog">

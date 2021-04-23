@@ -71,7 +71,7 @@ export default {
           }
         },
       ],
-      tableRows: [{refund_id: '231'}],
+      tableRows: [],
       formInfo: {
       },
       currentPage: 1,
@@ -84,17 +84,28 @@ export default {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
       }).then(({ value }) => {
-        alert(value)
+        this.$api.api.refuseOkSetFee({refund_id: row.refund_id, refund: value})
+            .then((res) => {
+              if(res.code === 0){
+                this.$message.success("操作成功")
+              }
+            })
       })
     },
     ok(row){
-      console.log(row)
-
+      this.$api.api.refuseOk({refund_id: row.refund_id})
+          .then((res) => {
+            if(res.code === 0){
+              this.$message.success("操作成功")
+            }
+          })
     },
     refuse(row){
       this.$api.api.refuseRefund({refund_id: row.refund_id})
-      .then(() => {
-        this.$message.success("操作成功")
+      .then((res) => {
+        if(res.code === 0){
+          this.$message.success("操作成功")
+        }
       })
     },
     currentChange(currentPage){

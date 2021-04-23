@@ -1,6 +1,11 @@
 <template>
   <div id="index">
-    index
+    <el-card class="box-card">
+      <div slot="header" class="clearfix">
+        <span>个人信息</span>
+      </div>
+
+    </el-card>
   </div>
 </template>
 

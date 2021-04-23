@@ -83,6 +83,15 @@ export default {
     activityInfo(params){
         return http.post("/4000/activity/getdetail", params)
     },
+    activityCancel(params){
+        return http.post("/4000/closing/cancel", params)
+    },
+    activityOk(params){
+        return http.post("/4000/closing/confirm", params)
+    },
+    activityOkDetails(params){
+        return http.post("/4000/closing/getdetail", params)
+    },
 
     // 支付
     paymentList(params){
@@ -96,6 +105,12 @@ export default {
     },
     refuseRefund(params){
         return http.post("/6000/refund/deldetail", params)
+    },
+    refuseOk(params){
+        return http.post("/6000/refund/order", params)
+    },
+    refuseOkSetFee(params){
+        return http.post("/6000/refund/order", params)
     }
 
 }

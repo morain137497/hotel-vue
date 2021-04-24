@@ -118,11 +118,19 @@ export default {
           prop: "title"
         },
         {
+          label: "价格(元)",
+          prop: "fee",
+          render: (h, params) => {
+            return h('span',{
+            }, Number(params.row.fee) / 100)
+          }
+        },
+        {
           label: "活动状态",
           prop: "checked",
           render: (h, params) => {
             return h('span',{
-            }, params.row.start === '1' ? "未开始" : params.row.start === '2' ? "报名中" : params.row.start === '3' ? "结束报名" : params.row.start === '4' ? '进行中' : '已经结束')
+            }, params.row.state === '1' ? "未开始" : params.row.state === '2' ? "报名中" : params.row.state === '3' ? "结束报名" : params.row.state === '4' ? '进行中' : '已经结束')
           }
         },
         {

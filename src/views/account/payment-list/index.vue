@@ -37,20 +37,24 @@ export default {
         },
         {
           label: "付款金额",
-          prop: "amount"
+          prop: "amount",
+          render: (h, params) => {
+            return h('span',{
+            }, (Number(params.row.amount ) / 100) + '元' )
+          }
         },
-        {
-          label: "付款的附带信",
-          prop: "attach"
-        },
-        {
-          label: "来源ID",
-          prop: "source_id"
-        },
-        {
-          label: "来源类别",
-          prop: "type"
-        },
+        // {
+        //   label: "付款的附带信",
+        //   prop: "attach"
+        // },
+        // {
+        //   label: "来源ID",
+        //   prop: "source_id"
+        // },
+        // {
+        //   label: "来源类别",
+        //   prop: "type"
+        // },
         {
           label: "付款标题",
           prop: "title"

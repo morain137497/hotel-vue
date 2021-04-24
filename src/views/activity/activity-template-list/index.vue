@@ -130,6 +130,14 @@ export default {
           prop: "title"
         },
         {
+          label: "价格(元)",
+          prop: "fee",
+          render: (h, params) => {
+            return h('span',{
+            }, Number(params.row.fee) / 100)
+          }
+        },
+        {
           label: "活动天数",
           prop: "days"
         },

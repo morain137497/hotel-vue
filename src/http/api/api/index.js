@@ -39,6 +39,9 @@ export default {
     articleList(params){
         return http.post("/3000/article/getlist", params)
     },
+    articleSearch(params){
+        return http.post("3000/article/search", params)
+    },
 
 
     // 评论
@@ -53,6 +56,9 @@ export default {
     },
     trackList(params){
         return http.post("/2000/track/getlist", params)
+    },
+    trackSearch(params){
+        return http.post("/2000/track/search", params)
     },
     trackInfo(params){
         return http.post("/2000/track/getdetail", params)

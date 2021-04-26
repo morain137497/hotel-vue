@@ -15,11 +15,11 @@
       <template v-slot:createOrUpdateDialog >
         <el-form ref="from" label-position="top" :model="formInfo">
           <el-form-item label="文章">
-            <el-select v-model="formInfo.article_id">
+            <el-select v-model="formInfo.article_id" filterable>
               <el-option v-for="(item,index) in articleList" :key="index" :label="item.title" :value="item.article_id"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="轨迹">
+          <el-form-item label="轨迹" filterable>
             <el-select v-model="formInfo.track_id">
               <el-option v-for="(item,index) in trackList" :key="index" :label="item.track_name" :value="item.track_id"></el-option>
             </el-select>
@@ -295,7 +295,7 @@ export default {
       })
     },
     getArticleList(){
-      this.$api.api.articleList({
+      this.$api.api.articleSearch({
         status: '3'
       })
       .then(res => {
@@ -305,7 +305,7 @@ export default {
       })
     },
     getTrackList(){
-      this.$api.api.trackList({
+      this.$api.api.trackSearch({
         status: '3'
       })
       .then(res => {

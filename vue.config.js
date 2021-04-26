@@ -1,6 +1,6 @@
 module.exports = {
     productionSourceMap: false,
-    // publicPath: '/vote',
+    publicPath: '/admin',
     chainWebpack: config =>{
         // 发布模式
         config.when( process.env.NODE_ENV === 'production', config => {

@@ -2,7 +2,7 @@ import axios from "axios";
 import user from "@/utils/user";
 import {Message, Loading} from "element-ui";
 if (process.env.NODE_ENV === "production") {
-    axios.defaults.baseURL = "http://47.98.45.245:8081"
+    axios.defaults.baseURL = "http://service.qunju.cn"
 } else {
     // axios.defaults.baseURL = "http://service.qunju.cn"
     axios.defaults.baseURL = "/api"

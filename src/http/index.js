@@ -1,6 +1,6 @@
 import axios from "axios";
 import user from "@/utils/user";
-import {Message} from "element-ui";
+import {Message, Loading} from "element-ui";
 if (process.env.NODE_ENV === "production") {
     axios.defaults.baseURL = "http://47.98.45.245:8081"
 } else {
@@ -9,11 +9,13 @@ if (process.env.NODE_ENV === "production") {
 }
 axios.defaults.timeout = 10000
 axios.defaults.withCredentials = true
-
+// eslint-disable-next-line no-unused-vars
+let loading = null
 axios.interceptors.request.use( config => {
     let token = user.getToken()
     if(token != null)
         config.headers['X-Token'] = token
+    loading = Loading.service({fullscreen: true, text: '正在加载'})
     return config;
 }, error => {
     return Promise.reject(error)
@@ -23,6 +25,7 @@ axios.interceptors.response.use( response => {
     if(response.data.code !== 0){
         Message.error(response.data.msg)
     }
+    loading.close();
     return response.data
 }, error => {
     if( error.response ) {

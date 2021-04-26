@@ -35,8 +35,8 @@ export default {
   data(){
     return{
       fromInfo: {
-        phone: '15893316477',
-        code: '872145'
+        phone: '',
+        code: ''
       },
       fromRules: {
         phone: [

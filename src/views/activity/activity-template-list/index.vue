@@ -19,8 +19,8 @@
               <el-option v-for="(item,index) in articleList" :key="index" :label="item.title" :value="item.article_id"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="轨迹" filterable>
-            <el-select v-model="formInfo.track_id">
+          <el-form-item label="轨迹" >
+            <el-select v-model="formInfo.track_id" filterable>
               <el-option v-for="(item,index) in trackList" :key="index" :label="item.track_name" :value="item.track_id"></el-option>
             </el-select>
           </el-form-item>

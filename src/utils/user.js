@@ -1,5 +1,5 @@
 const TOKEN_KEY = "token"
-const USER_ID_KEY = "userId"
+const PHONE_KEY = "phone"
 
 export default {
     getToken()
@@ -14,12 +14,12 @@ export default {
     {
         sessionStorage.removeItem(TOKEN_KEY)
     },
-    getUserId()
+    getPhone()
     {
-        return sessionStorage.getItem(USER_ID_KEY)
+        return sessionStorage.getItem(PHONE_KEY)
     },
-    setUserId(userId)
+    setPhone(phone)
     {
-        sessionStorage.setItem(USER_ID_KEY, userId)
+        sessionStorage.setItem(PHONE_KEY, phone)
     },
 }

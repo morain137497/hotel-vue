@@ -81,6 +81,7 @@ export default {
           .then(res => {
             if(res.code == 0) {
               user.setToken(res.token)
+              user.setPhone(this.fromInfo.phone)
               this.$router.push("/system/leader-list")
             }else{
               this.$message.error("验证码错误")

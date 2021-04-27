@@ -14,7 +14,7 @@
       <template v-slot:createOrUpdateDialog >
         <el-form ref="from" label-position="top" :model="formInfo">
           <el-form-item label="活动模板">
-            <el-select v-model="formInfo.template_id">
+            <el-select v-model="formInfo.template_id" filterable>
               <el-option v-for="(item,index) in articleList" :key="index" :label="item.title" :value="item.template_id"></el-option>
             </el-select>
           </el-form-item>

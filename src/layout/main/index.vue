@@ -12,15 +12,15 @@
           <el-breadcrumb-item v-for="(item, index) in $route.matched" :key="index">{{item.meta.title}}</el-breadcrumb-item>
         </el-breadcrumb>
         <el-dropdown class="header-dropdown" trigger="click" size="medium" placement="bottom-start" @command="handleCommand">
-<!--          <span>-->
-<!--            {{userId}}<i class="el-icon-arrow-down el-icon&#45;&#45;right"></i>-->
-<!--          </span>-->
-<!--          <el-dropdown-menu slot="dropdown">-->
+          <span>
+            {{phone}}<i class="el-icon-arrow-down el-icon--right"></i>
+          </span>
+          <el-dropdown-menu slot="dropdown">
 <!--            <el-dropdown-item>个人中心</el-dropdown-item>-->
 <!--            <el-dropdown-item>首页</el-dropdown-item>-->
 <!--            <el-dropdown-item command="updatePhone">修改手机号</el-dropdown-item>-->
-<!--            <el-dropdown-item divided>安全退出</el-dropdown-item>-->
-<!--          </el-dropdown-menu>-->
+            <el-dropdown-item command="logout">安全退出</el-dropdown-item>
+          </el-dropdown-menu>
         </el-dropdown>
       </div>
       <my-dialog ref="my-dialog" title="修改手机号" @submitDialog="submitDialog" @closeDialog="closeDialog">
@@ -64,7 +64,7 @@ export default {
       mainLeftWidth: "240px",
       collapseIcon: "el-icon-s-fold",
       clientWidth: document.body.clientWidth,
-      userId: "",
+      phone: "",
       formInfo:{
         phone: '18238003856',
         code: '873207'
@@ -103,6 +103,15 @@ export default {
     handleCommand(command){
       if(command == "updatePhone")
         this.$refs['my-dialog'].status = true
+      if(command == "logout"){
+        this.$api.login.logout()
+        .then(res => {
+          if(res.code === 0){
+            user.removeToken()
+            this.$router.push({name: 'Login'})
+          }
+        })
+      }
     },
     sendCode()
     {
@@ -134,7 +143,7 @@ export default {
     }
   },
   mounted() {
-    this.userId = user.getUserId()
+    this.phone = user.getPhone()
     if(this.clientWidth < 600)
     {
       this.closeMenu()

@@ -133,6 +133,7 @@ export default {
           label: "价格(元)",
           prop: "fee",
           render: (h, params) => {
+            console.log(params.row)
             return h('span',{
             }, Number(params.row.fee) / 100)
           }

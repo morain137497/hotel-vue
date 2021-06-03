@@ -8,6 +8,6 @@ export default {
         return http.post("/1000/auth/checkcode", params)
     },
     logout(){
-        return http.post("/1000/auth/logout")
+        return http.post("/1000/auth/logout", {})
     }
 }
